@@ -1,7 +1,8 @@
-from py1337x import py1337x
+from Py1337x import Py1337x
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import pyautogui
+
 from Series import Series
 import pickle
 
@@ -37,14 +38,16 @@ def prioritize_link(search_results):
             search_result['points'] += 1
         if 'YIFY' in search_result['name']:
             search_result['points'] += 1.5
+        if 'CAKES' in search_result['name']:
+            search_result['points'] += 0.5
     return find_best(search_results)
 
 
 def notification_hotkeys_combo(comp, driver):
     comp.send_keys(Keys.ENTER)
-    pyautogui.hotkey('1', interval=0.6)
-    pyautogui.hotkey('right', interval=0.6)
-    pyautogui.hotkey('enter', interval=0.5)
+    pyautogui.hotkey('1', interval=0.4)
+    pyautogui.hotkey('right', interval=0.4)
+    pyautogui.hotkey('enter', interval=0.3)
     driver.close()
 
 
@@ -68,7 +71,7 @@ def pass_on_season(torrents_list, chosen_series):
 
 
 def init():
-    torrents = py1337x()
+    torrents = Py1337x()
     series = get_series()
     return torrents, series
 
@@ -78,7 +81,6 @@ def prog_start(torrents, series):
         pass_on_season(torrents, series)
     else:
         search_result = torrents.search(str(series))
-        prev_season = series.season
         series.season = 1
         while len(search_result['items']) != 0:
             pass_on_season(torrents, series)
