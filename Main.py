@@ -2,6 +2,7 @@ from Py1337x import Py1337x
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import pyautogui
+from selenium.webdriver.chrome.service import Service
 
 from Series import Series
 import pickle
@@ -20,31 +21,30 @@ def get_series():
 
 
 def find_best(search_results):
-    result = search_results['items'][0]
-    for search_result in search_results['items']:
+    result = search_results[0]
+    for search_result in search_results:
         if search_result['points'] > result['points']:
             result = search_result
     return result
 
 
 def prioritize_link(search_results):
-    for search_result in search_results['items']:
+    for search_result in search_results:
         search_result['points'] = 0
-        if '1080p' in search_result['name']:
+        if '1080p' in search_result['title']:
             search_result['points'] += 3
-        elif '720p' in search_result['name']:
+        elif '720p' in search_result['title']:
             search_result['points'] += 1
-        if '⭐' in search_result['name']:
+        if '⭐' in search_result['title']:
             search_result['points'] += 1
-        if 'YIFY' in search_result['name']:
+        if 'YIFY' in search_result['title']:
             search_result['points'] += 1.5
-        if 'CAKES' in search_result['name']:
+        if 'CAKES' in search_result['title']:
             search_result['points'] += 0.5
     return find_best(search_results)
 
 
-def notification_hotkeys_combo(comp, driver):
-    comp.send_keys(Keys.ENTER)
+def notification_hotkeys_combo(driver):
     pyautogui.hotkey('1', interval=0.4)
     pyautogui.hotkey('right', interval=0.4)
     pyautogui.hotkey('enter', interval=0.3)
@@ -54,18 +54,15 @@ def notification_hotkeys_combo(comp, driver):
 def pass_on_season(torrents_list, chosen_series):
     first_time = False
     search_result = torrents_list.search(str(chosen_series))
-    while len(search_result['items']) != 0:
+
+    while len(search_result) != 0:
         prioritized_link = prioritize_link(search_result)
         driver = webdriver.Chrome(executable_path=r"C:\Users\Omer\Downloads\chromedriver.exe")
-        driver.get(prioritized_link['link'])
-        cookies = pickle.load(open("cookies.pkl", "rb"))
-        for cookie in cookies:
-            driver.add_cookie(cookie)
-        comp = driver.find_element_by_xpath("/html/body/main/div/div/div/div[2]/div[1]/ul[1]/li[1]/a")
+        driver.get(prioritized_link['MagnetLink'])
         if first_time is False:
-            driver.implicitly_wait(0.5)
+            driver.implicitly_wait(0.3)
         first_time = False
-        notification_hotkeys_combo(comp, driver)
+        notification_hotkeys_combo(driver)
         chosen_series.episode += 1
         search_result = torrents_list.search(str(chosen_series))
 
