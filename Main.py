@@ -1,18 +1,15 @@
 from Py1337x import Py1337x
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-import pyautogui
 from selenium.webdriver.chrome.service import Service
-
+import pyautogui
 from Series import Series
-import pickle
 
 
 def get_series():
     name = input('Enter series name: ')
     season = int(input('Enter season: '))
-    download_all = input("Download all (Yes/No): ")
-    if download_all == 'Yes':
+    download_all = input("Download all (Yes/No): ").lower()
+    if download_all == 'yes':
         download_all = True
     else:
         download_all = False
@@ -45,9 +42,9 @@ def prioritize_link(search_results):
 
 
 def notification_hotkeys_combo(driver):
-    pyautogui.hotkey('1', interval=0.4)
-    pyautogui.hotkey('right', interval=0.4)
-    pyautogui.hotkey('enter', interval=0.3)
+    pyautogui.hotkey('1', interval=0.1)
+    pyautogui.hotkey('right', interval=0.2)
+    pyautogui.hotkey('enter', interval=0.2)
     driver.close()
 
 
@@ -57,23 +54,24 @@ def pass_on_season(torrents_list, chosen_series):
 
     while len(search_result) != 0:
         prioritized_link = prioritize_link(search_result)
-        driver = webdriver.Chrome(executable_path=r"C:\Users\Omer\Downloads\chromedriver.exe")
+        s = Service(r"C:\Users\Omer\Downloads\chromedriver.exe")
+        driver = webdriver.Chrome(service=s)
         driver.get(prioritized_link['MagnetLink'])
         if first_time is False:
-            driver.implicitly_wait(0.3)
+            driver.implicitly_wait(0.2)
         first_time = False
         notification_hotkeys_combo(driver)
         chosen_series.episode += 1
         search_result = torrents_list.search(str(chosen_series))
 
 
-def init():
+def init_parameters():
     torrents = Py1337x()
     series = get_series()
     return torrents, series
 
 
-def prog_start(torrents, series):
+def program_start(torrents : Py1337x, series: Series):
     if series.all is False:
         pass_on_season(torrents, series)
     else:
@@ -87,5 +85,5 @@ def prog_start(torrents, series):
         exit(0)
 
 
-torrents, series = init()
-prog_start(torrents, series)
+torrents, series = init_parameters()
+program_start(torrents, series)

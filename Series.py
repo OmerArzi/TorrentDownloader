@@ -1,3 +1,8 @@
+import sqlite3
+from sqlite3 import Error
+import WatchStatusDBM as db
+
+
 class Series:
     def __init__(self, name, season, is_all=False):
         self.name = name
@@ -5,10 +10,10 @@ class Series:
         self.episode = 1
         self.all = is_all
 
-
     def get_episode_str(self):
         if self.episode<10:
             return '0' + str(self.episode)
+
         else:
             return str(self.episode)
 
