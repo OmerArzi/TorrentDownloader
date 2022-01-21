@@ -41,7 +41,9 @@ def prioritize_link(search_results):
     return find_best(search_results)
 
 
-def notification_hotkeys_combo(driver):
+def notification_hotkeys_combo(driver, first_time: bool):
+    if first_time is False:
+        driver.implicitly_wait(0.2)
     pyautogui.hotkey('1', interval=0.1)
     pyautogui.hotkey('right', interval=0.2)
     pyautogui.hotkey('enter', interval=0.2)
@@ -51,16 +53,14 @@ def notification_hotkeys_combo(driver):
 def pass_on_season(torrents_list, chosen_series):
     first_time = False
     search_result = torrents_list.search(str(chosen_series))
-
     while len(search_result) != 0:
         prioritized_link = prioritize_link(search_result)
         s = Service(r"C:\Users\Omer\Downloads\chromedriver.exe")
         driver = webdriver.Chrome(service=s)
         driver.get(prioritized_link['MagnetLink'])
-        if first_time is False:
-            driver.implicitly_wait(0.2)
+        notification_hotkeys_combo(driver, first_time)
         first_time = False
-        notification_hotkeys_combo(driver)
+        chosen_series.update_episode()
         chosen_series.episode += 1
         search_result = torrents_list.search(str(chosen_series))
 
@@ -71,7 +71,7 @@ def init_parameters():
     return torrents, series
 
 
-def program_start(torrents : Py1337x, series: Series):
+def program_start(torrents: Py1337x, series: Series):
     if series.all is False:
         pass_on_season(torrents, series)
     else:
@@ -85,5 +85,10 @@ def program_start(torrents : Py1337x, series: Series):
         exit(0)
 
 
-torrents, series = init_parameters()
-program_start(torrents, series)
+def main():
+    torrents, series = init_parameters()
+    program_start(torrents, series)
+
+
+if __name__ == '__main__':
+    main()
