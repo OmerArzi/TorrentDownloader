@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 import pyautogui
 from Series import Series
-
+import WatchStatusDBM as db
 
 def get_series():
     name = input('Enter series name: ')
@@ -60,8 +60,8 @@ def pass_on_season(torrents_list, chosen_series):
         driver.get(prioritized_link['MagnetLink'])
         notification_hotkeys_combo(driver, first_time)
         first_time = False
-        chosen_series.update_episode()
         chosen_series.episode += 1
+        chosen_series.update_episode()
         search_result = torrents_list.search(str(chosen_series))
 
 

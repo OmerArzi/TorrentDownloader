@@ -39,7 +39,7 @@ def update_series(conn: sqlite3.Connection, updated_series_status: tuple):
     """
     sql = ''' UPDATE series
               SET season = ? ,
-                  episode = ? ,
+                  episode = ?
               WHERE name = ?'''
     cur = conn.cursor()
     cur.execute(sql, updated_series_status)

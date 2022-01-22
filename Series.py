@@ -15,7 +15,7 @@ class Series:
             if len(series_data) == 0:
                 self._init_new_series(conn, name, season)
             else:
-                [self.name, self.season, self.episode] = series_data
+                (self.name, self.season, self.episode) = series_data[0]
 
     def _init_new_series(self, database_connector, name: str, season: int):
         self.name = name
@@ -33,12 +33,13 @@ class Series:
         try:
             database_connector = db.init_database()
             with database_connector as conn:
-                conn.update_series(conn, (self.season, self.episode, self.name))
+                db.update_series(conn, (self.season, self.episode, self.name))
         except Error as err:
             print(err)
-            series_list = db.select_series_by_name(self.name)
+            series_list = db.select_series_by_name(conn, self.name)
             if self.season != series_list[1] or self.episode != series_list[2]:
                 print("DATA DID NOT UPDATED.")
+                exit(1)
 
     def exception_initiation(self, db_error: Error, name: str, season: int):
         print(db_error)
