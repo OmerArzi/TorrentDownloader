@@ -5,15 +5,18 @@ import pyautogui
 from Series import Series
 import WatchStatusDBM as db
 
+
+# TODO: Validate updating (update database after confirming requested episode is being downloaded (could be via torrent name)).
+
+
 def get_series():
     name = input('Enter series name: ')
-    season = int(input('Enter season: '))
-    download_all = input("Download all (Yes/No): ").lower()
-    if download_all == 'yes':
+    download_all = input("Download all (y/n): ").lower()
+    if download_all == 'y':
         download_all = True
     else:
         download_all = False
-    res_series = Series(name, season, download_all)
+    res_series = Series(name)
     return res_series
 
 
@@ -48,18 +51,20 @@ def notification_hotkeys_combo(driver, first_time: bool):
     pyautogui.hotkey('right', interval=0.2)
     pyautogui.hotkey('enter', interval=0.2)
     driver.close()
+    return False
 
 
-def pass_on_season(torrents_list, chosen_series):
-    first_time = False
+def download_single_season(torrents_list, chosen_series):
+    first_time = True
     search_result = torrents_list.search(str(chosen_series))
     while len(search_result) != 0:
         prioritized_link = prioritize_link(search_result)
-        s = Service(r"C:\Users\Omer\Downloads\chromedriver.exe")
-        driver = webdriver.Chrome(service=s)
+        # s = Service(r"C:\Users\Omer\Downloads\chromedriver.exe")
+        driver = webdriver.Chrome(r"C:\Users\Omer\Downloads\chromedriver.exe")
         driver.get(prioritized_link['MagnetLink'])
-        notification_hotkeys_combo(driver, first_time)
-        first_time = False
+        first_time = notification_hotkeys_combo(driver, first_time)
+        # TODO: Add file path to function call (to 'chosen_series.create_episode_path':)
+        chosen_series.create_episode_path(prioritized_link['title'])
         chosen_series.episode += 1
         chosen_series.update_episode()
         search_result = torrents_list.search(str(chosen_series))
@@ -72,13 +77,13 @@ def init_parameters():
 
 
 def program_start(torrents: Py1337x, series: Series):
-    if series.all is False:
-        pass_on_season(torrents, series)
+    if not series.all:
+        download_single_season(torrents, series)
     else:
         search_result = torrents.search(str(series))
         series.season = 1
-        while len(search_result['items']) != 0:
-            pass_on_season(torrents, series)
+        while len(search_result) != 0:
+            download_single_season(torrents, series)
             series.season += 1
             series.episode = 1
             search_result = torrents.search(str(series))
@@ -87,6 +92,7 @@ def program_start(torrents: Py1337x, series: Series):
 
 def main():
     torrents, series = init_parameters()
+    # TODO: Create folder according to series name
     program_start(torrents, series)
 
 
