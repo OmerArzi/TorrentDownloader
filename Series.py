@@ -56,7 +56,7 @@ class Series:
 
     def create_episode_path(self, episode_torrent_name: str, torrent_path=""):
         db.create_episode(self.database_connector,
-                         (self.name, self.season, self.episode, episode_torrent_name, torrent_path))
+                          (self.name, self.season, self.episode, episode_torrent_name, torrent_path))
 
     @staticmethod
     def delete_series_by_name(series_to_be_deleted: str):

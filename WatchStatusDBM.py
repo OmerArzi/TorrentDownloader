@@ -1,5 +1,6 @@
 import sqlite3
 from sqlite3 import Error
+import os
 
 
 def create_series(conn: sqlite3.Connection, series: tuple):
@@ -19,7 +20,7 @@ def create_series(conn: sqlite3.Connection, series: tuple):
 
 def select_series_by_name(conn: sqlite3.Connection, series_name: str):
     """
-    Query series by name
+    Select series by name
     :param conn: the Connection object
     :param series_name:
     :return:
@@ -119,8 +120,15 @@ def create_episode(conn: sqlite3.Connection, episode: tuple):
     return cur.lastrowid
 
 
+def create_database_file():
+    user_dir_path = os.path.join("C:\\", "sqlite", "db", "watchstatus.db")
+    f = open(user_dir_path, "a")
+    f.close()
+    return user_dir_path
+
+
 def init_database():
-    database_path = r"C:\sqlite\db\watchstatus.db"
+    database_path = create_database_file()
     sql_create_series_table = """ CREATE TABLE IF NOT EXISTS series (
                                             name text PRIMARY KEY,
                                             season integer NOT NULL,
