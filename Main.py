@@ -111,5 +111,5 @@ def main():
 
 
 if __name__ == '__main__':
-    organize_single_series("ousama ranking", "D:\\Shows\\")
-    #main()
+    #organize_single_series("ousama ranking", "D:\\Shows\\")
+    main()
