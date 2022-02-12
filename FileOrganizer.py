@@ -1,7 +1,5 @@
 import os
 import shutil
-import sys
-import subprocess
 import WatchStatusDBM as db
 
 

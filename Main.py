@@ -7,8 +7,8 @@ import WatchStatusDBM as db
 from FileOrganizer import organize_single_series
 
 
+# TODO New feature idea: search new episodes for all project in db.
 # TODO Validate updating (update database after confirming requested episode is being downloaded (could be via torrent name)).
-# TODO File-Organizer wrapper in main process (as a function)
 
 def get_series():
     name = input('Enter series name: ')
@@ -21,12 +21,12 @@ def get_series():
     return res_series
 
 
-def find_best(search_results):
-    result = search_results[0]
-    for search_result in search_results:
-        if search_result['points'] > result['points']:
-            result = search_result
-    return result
+# def find_best(search_results):
+#     result = search_results[0]
+#     for search_result in search_results:
+#         if search_result['points'] > result['points']:
+#             result = search_result
+#     return result
 
 
 def prioritize_link(search_results):
@@ -43,7 +43,7 @@ def prioritize_link(search_results):
             search_result['points'] += 1.5
         if 'CAKES' in search_result['title']:
             search_result['points'] += 0.5
-    return find_best(search_results)
+    return max(search_results, key=lambda single_series: single_series['points'])
 
 
 def open_magnet(magnet):
@@ -74,9 +74,7 @@ def download_single_season(torrents_list, chosen_series: Series, dir_path: str):
 
 
 def init_parameters():
-    torrents = Py1337x()
-    series = get_series()
-    return torrents, series
+    return Py1337x(), get_series()
 
 
 def program_start(torrents: Py1337x, series: Series, dir_path=""):
@@ -111,5 +109,5 @@ def main():
 
 
 if __name__ == '__main__':
-    #organize_single_series("ousama ranking", "D:\\Shows\\")
+    # organize_single_series("ousama ranking", "D:\\Shows\\")
     main()
