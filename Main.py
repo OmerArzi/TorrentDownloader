@@ -73,10 +73,6 @@ def download_single_season(torrents_list, chosen_series: Series, dir_path: str):
         search_result = torrents_list.search(str(chosen_series))
 
 
-def init_parameters():
-    return Py1337x(), get_series()
-
-
 def program_start(torrents: Py1337x, series: Series, dir_path=""):
     if not series.all:
         download_single_season(torrents, series, dir_path)
@@ -103,7 +99,7 @@ def create_series_path(series: Series):
 
 def main():
     db.create_database_file()
-    torrents, series = init_parameters()
+    torrents, series = Py1337x(), get_series()
     series_directory, season_dir_path = create_series_path(series)
     program_start(torrents, series, season_dir_path)
 
