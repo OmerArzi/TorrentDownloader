@@ -44,6 +44,19 @@ def select_episodes_by_name(conn: sqlite3.Connection, series_name: str):
     return query_result
 
 
+def select_all_tv_shows(conn: sqlite3.Connection):
+    """
+    Query series by name
+    :param conn: the Connection object
+    :return: List of all unique tv-shows names in database
+    """
+    # TODO: check if works
+    cur = conn.cursor()
+    cur.execute("SELECT distinct * FROM series")
+    query_result = cur.fetchall()
+    return query_result
+
+
 def update_series(conn: sqlite3.Connection, updated_series_status: tuple):
     """
     update season, and episode of a series

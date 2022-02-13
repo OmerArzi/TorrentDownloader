@@ -11,13 +11,9 @@ from FileOrganizer import organize_single_series
 # TODO Validate updating (update database after confirming requested episode is being downloaded (could be via torrent name)).
 
 def get_series():
-    name = input('Enter series name: ')
+    name = input('Enter series name: ').lower()
     download_all = input("Download all (y/n): ").lower()
-    if download_all == 'y':
-        download_all = True
-    else:
-        download_all = False
-    res_series = Series(name, download_all)
+    res_series = Series(name, True if download_all == 'y' else False)
     return res_series
 
 
@@ -105,5 +101,5 @@ def main():
 
 
 if __name__ == '__main__':
-    # organize_single_series("ousama ranking", "D:\\Shows\\")
+    #organize_single_series("peacemaker", "D:\\Shows\\")
     main()

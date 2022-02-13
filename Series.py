@@ -4,7 +4,7 @@ from sqlite3 import Error
 
 # TODO: Check if episode being downloaded. If it is-> update. If it doesn't-> Alert user.
 # TODO: Re-watching mode - In case the user wants to re-download a series.
-
+# TODO: Downloader won't save series to database if it didn't find anything
 
 class Series:
     def __init__(self, name: str, is_all=False):
